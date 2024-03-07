@@ -11,6 +11,11 @@ app.use(express.json());
  *     Response (Text): "1.0.0"
  */
 // Your code here
+const currentVersion = '1.0.0';
+
+app.get('/version', (req, res) => {
+    res.send(currentVersion);
+});
 
 /**
  *  Basic Phase 2 - Route param and JSON response
@@ -29,6 +34,15 @@ app.use(express.json());
  *  combined with the id sent as a route parameter in the url
  */
 // Your code here
+app.get('/viewers/:id', (req, res) => {
+    res.json({
+        id: req.params.id,
+        firstName: 'Victor',
+        lastName: 'Johnson',
+        birthDate: '01/02/2003',
+        favoriteMovies: ['Dune: Part Two', 'Matrix', 'Lord of the Rings']
+    });
+});
 
 /** Basic Phase 3 - Query params in URL
  *      Method: GET
@@ -48,6 +62,15 @@ app.use(express.json());
  *          message required
  */
 // Your code here
+app.get('/info', (req, res) => {
+    const message = req.query.message;
+
+    if(message === undefined || message === '') {
+        res.send('message required');
+    } else {
+        res.send(message);
+    }
+});
 
 /**
  *  IMPORTANT: Scroll to the top for basic phases.
@@ -82,6 +105,21 @@ app.use(express.json());
  *          { "id": 98765432, "name": "Honey Sweet", "year": 1967, "isFavorite": false }
  */
 // Your code here
+app.post('/movies', (req, res) => {
+    const movie = req.body;
+    const id = Math.floor(Math.random() * 1000000);
+    const year = ~~movie.year;
+    const isFavorite = movie.favorite === 'on' ? true : false;
+
+    const data = {
+        id,
+        year,
+        isFavorite,
+        name: movie.name,
+    }
+
+    res.json(data);
+});
 
 /**
  *  Advanced Bonus Phase B - Research how to return static
@@ -99,6 +137,10 @@ app.use(express.json());
  *      Test route: /logo.png
  */
 // Your code here
+app.get('/:file', (req, res) => {
+    const filePath = `${__dirname}/public/${req.params.file}`;
+    res.download(filePath);
+})
 
 // DO NOT EDIT - Set port and listener
 if (require.main === module) {
